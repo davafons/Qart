@@ -7,22 +7,24 @@ class Texture
 {
 private:
 
+	// Texture
 	SDL_Texture * texture_;
 
+	// Texture information
 	SDL_PixelFormat fmt_;
-
 	void * pixels_;
 	int pitch_;
 
+	// Texture dimensions
 	int width_;
 	int height_;
 
 public:
+
 	Texture(void);
 	~Texture(void);
 
 	// Getters
-
 	int getWidth(void) const;
 	int getHeight(void) const;
 
@@ -30,7 +32,7 @@ public:
 
 	SDL_Color getAverageColor(SDL_Rect src);
 
-	void render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip);
+	void render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip) const;
 
 private:
 

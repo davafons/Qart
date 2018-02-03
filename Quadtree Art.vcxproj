@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\SDL\SDL2-2.0.7\lib\x86;E:\SDL\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\SDL2\SDL2_image-2.0.2\include;C:\SDL2\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\SDL2\SDL2-2.0.7\lib\x86;C:\SDL2\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
@@ -130,12 +130,14 @@
   <ItemGroup>
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Qart.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Qart.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

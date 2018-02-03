@@ -2,16 +2,14 @@
 
 #include "Engine.h"
 #include "Texture.h"
+#include "Quadtree.h"
 
 class Qart : public Engine
 {
 private:
 
-	bool quit_;
-
 	Texture image_;
-
-	SDL_Color average_color_;
+	Quadtree * qtree_;
 
 public:
 	Qart(void);

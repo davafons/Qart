@@ -13,6 +13,10 @@ protected:
 	const int SCREEN_WIDTH_;
 	const int SCREEN_HEIGHT_;
 
+	bool quit_;
+
+	// Functions
+
 	Engine(void);
 	~Engine(void);
 

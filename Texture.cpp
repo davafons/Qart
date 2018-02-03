@@ -5,6 +5,7 @@
 
 Texture::Texture():
 	texture_(nullptr),
+	fmt_(SDL_PixelFormat()),
 	pixels_(nullptr),
 	pitch_(0),
 	width_(0),
@@ -33,30 +34,28 @@ int Texture::getHeight(void) const
 
 bool Texture::load(const char * path, SDL_Window * window, SDL_Renderer * renderer)
 {
+	free();
+
+	// Load image in surface and save pixel format
 	SDL_Surface * tempSurface = IMG_Load(path);
-
-	// Save pixel format
 	fmt_ = *tempSurface->format;
-
-	std::cout << SDL_GetPixelFormatName(fmt_.format) << std::endl;
 
 	if (tempSurface == nullptr)
 		throw IMG_GetError();
 
+	// Create texture allowing pixel manipulation
 	SDL_Texture * nTexture = SDL_CreateTexture(renderer, fmt_.format, SDL_TEXTUREACCESS_STREAMING, tempSurface->w, tempSurface->h);
 
 	if (nTexture == nullptr)
 		throw SDL_GetError();
 
-	SDL_SetTextureBlendMode(texture_, SDL_BLENDMODE_BLEND);
-
 	// Lock and copy pixels
 	SDL_LockTexture(nTexture, nullptr, &pixels_, &pitch_);
 
-	memcpy(pixels_, tempSurface->pixels, tempSurface->pitch * tempSurface->h);
+	memcpy(pixels_, tempSurface->pixels, pitch_ * tempSurface->h);
 
+	// Unlock and free
 	SDL_UnlockTexture(nTexture);
-
 	pixels_ = nullptr;
 
 	// Copy surface dimensions
@@ -65,6 +64,7 @@ bool Texture::load(const char * path, SDL_Window * window, SDL_Renderer * render
 
 	SDL_FreeSurface(tempSurface);
 
+	// Save loaded texture
 	texture_ = nTexture;
 
 	return texture_ != nullptr;
@@ -73,29 +73,26 @@ bool Texture::load(const char * path, SDL_Window * window, SDL_Renderer * render
 
 SDL_Color Texture::getAverageColor(SDL_Rect src)
 {
-	int totalR = 0;
-	int totalG = 0;
-	int totalB = 0;
+	//std::cout << "Format" << SDL_GetPixelFormatName(fmt_.format) << std::endl;
 
-	std::cout << "Format" << SDL_GetPixelFormatName(fmt_.format) << std::endl;
+	int totalR = 0, totalG = 0, totalB = 0;
 
 	// Lock Texture
 	SDL_LockTexture(texture_, &src, &pixels_, &pitch_);
 
 	for (int y = 0; y < src.h; ++y)
 	{
-		for (int x = 0; x < src.w; ++x)
+		for (int x = 0; x < src.w; ++x) 
 		{
-			Uint8 r; Uint8 g; Uint8 b; Uint8 a;
+			Uint8 r, g, b, a;
 
 			SDL_GetRGBA(getpixel(x, y), &fmt_, &r, &g, &b, &a);
-
-			if (a)
+			
+			if (a) // Only add values from non-alpha pixels
 			{
-				totalR += (int)r;
-				totalG += (int)g;
-				totalB += (int)b;
-				//std::cout << (int)r << " " << (int)g << " " << (int)b << " " << (int)a << " " << std::endl;
+				totalR += r;
+				totalG += g;
+				totalB += b;
 			}
 		}
 	}
@@ -103,15 +100,15 @@ SDL_Color Texture::getAverageColor(SDL_Rect src)
 	// Unlock Texture
 	SDL_UnlockTexture(texture_);
 
-	SDL_Color average = { totalR / ((src.w * src.h)), totalG / ((src.w * src.h)), totalB / (src.w * src.h), 255 };
+	SDL_Color average_color = { totalR / (src.w * src.h), totalG / (src.w * src.h), totalB / (src.w * src.h), 255 };
 
-	std::cout << (int)average.r << " " << (int)average.g << " " << (int)average.b << " " << (int)average.a << " " << std::endl;
+	//std::cout << (int)average_color.r << " " << (int)average_color.g << " " << (int)average_color.b << " " << (int)average_color.a << " " << std::endl;
 
-	return average;
+	return average_color;
 }
 
 
-void Texture::render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip)
+void Texture::render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip) const
 {
 	SDL_Rect renderQuad = { x, y, width_, height_ };
 
@@ -123,7 +120,6 @@ void Texture::render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip)
 
 	SDL_RenderCopy(renderer, texture_, clip, &renderQuad);
 }
-
 
 
 void Texture::free(void)

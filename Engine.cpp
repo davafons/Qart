@@ -4,7 +4,8 @@ Engine::Engine(void):
 	window_(nullptr),
 	renderer_(nullptr),
 	SCREEN_WIDTH_(800),
-	SCREEN_HEIGHT_(600)
+	SCREEN_HEIGHT_(800),
+	quit_(false)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		throw SDL_GetError();
