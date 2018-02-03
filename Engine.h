@@ -7,6 +7,8 @@ class Engine
 {
 protected:
 
+	// Attributes
+
 	SDL_Window * window_;
 	SDL_Renderer * renderer_;
 
@@ -15,18 +17,19 @@ protected:
 
 	bool quit_;
 
+
 	// Functions
 
 	Engine(void);
 	~Engine(void);
 
 
-	virtual void execute() = 0;
+	virtual void execute(void) = 0;
 
-	virtual void input() = 0;
+	virtual void input(void) = 0;
 
-	virtual void update() = 0;
+	virtual void update(void) = 0;
 
-	virtual void render() = 0;
+	virtual void render(void) = 0;
 };
 
