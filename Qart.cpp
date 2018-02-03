@@ -10,6 +10,7 @@ Qart::Qart(void) :
 
 Qart::~Qart(void)
 {
+	delete qtree_;
 }
 
 
@@ -35,15 +36,15 @@ void Qart::input(void)
 
 		if (e.type == SDL_DROPFILE)
 		{
+			// Get image path
 			char * path = e.drop.file;
 
-			image_.load(path, window_, renderer_);
+			image_.load(path, window_);
 
 			SDL_free(path);
 
-			qtree_ = new Quadtree(image_, 0, SDL_Rect{ 0, 0, image_.getWidth(), image_.getHeight() });
-			
-			qtree_->getAverageColor();
+			delete qtree_;
+			qtree_ = new Quadtree(image_, 0, SDL_Rect{ 0, 0, SCREEN_WIDTH_, SCREEN_HEIGHT_ });
 		}
 
 		if (e.type == SDL_KEYDOWN)
@@ -68,13 +69,8 @@ void Qart::render(void)
 {
 	SDL_RenderClear(renderer_);
 
-	image_.render(renderer_, 0, 0, nullptr);
-
 	if (qtree_ != nullptr)
-	{
 		qtree_->render(renderer_);
-	}
-
 
 	SDL_RenderPresent(renderer_);
 }

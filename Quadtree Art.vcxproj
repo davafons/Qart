@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\SDL2\SDL2_image-2.0.2\include;C:\SDL2\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\SDL2\SDL2-2.0.7\lib\x86;C:\SDL2\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;C:\SDL2\SDL2_image-2.0.2\include;C:\SDL2\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\SDL\SDL2-2.0.7\lib\x86;E:\SDL\SDL2_image-2.0.2\lib\x86;C:\SDL2\SDL2-2.0.7\lib\x86;C:\SDL2\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
-    <LibraryPath>E:\SDL\SDL2-2.0.7\lib\x86;E:\SDL\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;E:\SDL\SDL2_image-2.0.2\include;E:\SDL\SDL2-2.0.7\include;$(IncludePath)</IncludePath>
+    <LibraryPath>E:\SDL\SDL2-2.0.7\lib\x86;E:\SDL\SDL2_image-2.0.2\lib\x86;E:\SDL\SDL2-2.0.7\lib\x86;E:\SDL\SDL2_image-2.0.2\lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
