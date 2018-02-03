@@ -4,12 +4,7 @@
 
 
 Texture::Texture():
-	texture_(nullptr),
-	fmt_(SDL_PixelFormat()),
-	pixels_(nullptr),
-	pitch_(0),
-	width_(0),
-	height_(0)
+	surface_(nullptr)
 {
 }
 
@@ -22,138 +17,92 @@ Texture::~Texture(void)
 
 int Texture::getWidth(void) const
 {
-	return width_;
+	return surface_->w;
 }
 
 
 int Texture::getHeight(void) const
 {
-	return height_;
+	return surface_->h;
 }
 
 
-bool Texture::load(const char * path, SDL_Window * window, SDL_Renderer * renderer)
+bool Texture::load(const char * path, SDL_Window * window)
 {
 	free();
 
-	// Load image in surface and save pixel format
+	// Load image
 	SDL_Surface * tempSurface = IMG_Load(path);
-	fmt_ = *tempSurface->format;
 
 	if (tempSurface == nullptr)
 		throw IMG_GetError();
 
-	// Create texture allowing pixel manipulation
-	SDL_Texture * nTexture = SDL_CreateTexture(renderer, fmt_.format, SDL_TEXTUREACCESS_STREAMING, tempSurface->w, tempSurface->h);
+	// Converting to a 32bpp surface allows to scale size and save alpha channel in .png files
+	SDL_Surface * p32bppSurface = SDL_CreateRGBSurface(tempSurface->flags, tempSurface->w, tempSurface->h, 32, tempSurface->format->Rmask, tempSurface->format->Gmask, tempSurface->format->Bmask, tempSurface->format->Amask);
 
-	if (nTexture == nullptr)
+	if (SDL_BlitSurface(tempSurface, nullptr, p32bppSurface, nullptr) < 0)
 		throw SDL_GetError();
 
-	// Lock and copy pixels
-	SDL_LockTexture(nTexture, nullptr, &pixels_, &pitch_);
+	// Scale image to screen dimensions
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
 
-	memcpy(pixels_, tempSurface->pixels, pitch_ * tempSurface->h);
+	surface_ = SDL_CreateRGBSurface(p32bppSurface->flags, w, h, p32bppSurface->format->BitsPerPixel, p32bppSurface->format->Rmask, p32bppSurface->format->Gmask, p32bppSurface->format->Bmask, p32bppSurface->format->Amask);
 
-	// Unlock and free
-	SDL_UnlockTexture(nTexture);
-	pixels_ = nullptr;
-
-	// Copy surface dimensions
-	width_ = tempSurface->w;
-	height_ = tempSurface->h;
-
+	if (SDL_BlitScaled(p32bppSurface, nullptr, surface_, nullptr) < 0)
+		throw SDL_GetError();
+	
+	// Free alloc memory
 	SDL_FreeSurface(tempSurface);
+	SDL_FreeSurface(p32bppSurface);
 
-	// Save loaded texture
-	texture_ = nTexture;
-
-	return texture_ != nullptr;
+	return surface_ != nullptr;
 }
 
 
 SDL_Color Texture::getAverageColor(SDL_Rect src)
 {
-	//std::cout << "Format" << SDL_GetPixelFormatName(fmt_.format) << std::endl;
+	///std::cout << src.x << " " << src.y << " " << src.w << " " << src.h << std::endl;
 
 	int totalR = 0, totalG = 0, totalB = 0;
 
-	// Lock Texture
-	SDL_LockTexture(texture_, &src, &pixels_, &pitch_);
+	// Lock Surface for pixel manipulation
+	SDL_LockSurface(surface_);
 
-	for (int y = 0; y < src.h; ++y)
+	for (int y = src.y; y < src.y + src.h; ++y)
 	{
-		for (int x = 0; x < src.w; ++x) 
+		for (int x = src.x; x < src.x + src.w; ++x) 
 		{
-			Uint8 r, g, b, a;
+			Uint8 r, g, b;
 
-			SDL_GetRGBA(getpixel(x, y), &fmt_, &r, &g, &b, &a);
+			SDL_GetRGB(getpixel32(x, y), surface_->format, &r, &g, &b);
 			
-			if (a) // Only add values from non-alpha pixels
-			{
-				totalR += r;
-				totalG += g;
-				totalB += b;
-			}
+			totalR += r;
+			totalG += g;
+			totalB += b;
 		}
 	}
 
-	// Unlock Texture
-	SDL_UnlockTexture(texture_);
+	// Unlock Surface
+	SDL_UnlockSurface(surface_);
 
+	// Average color = total color value / area
 	SDL_Color average_color = { totalR / (src.w * src.h), totalG / (src.w * src.h), totalB / (src.w * src.h), 255 };
-
-	//std::cout << (int)average_color.r << " " << (int)average_color.g << " " << (int)average_color.b << " " << (int)average_color.a << " " << std::endl;
+	///std::cout << (int)average_color.r << " " << (int)average_color.g << " " << (int)average_color.b << " " << (int)average_color.a << " " << std::endl;
 
 	return average_color;
 }
 
 
-void Texture::render(SDL_Renderer * renderer, int x, int y, SDL_Rect * clip) const
-{
-	SDL_Rect renderQuad = { x, y, width_, height_ };
-
-	if (clip != nullptr)
-	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
-
-	SDL_RenderCopy(renderer, texture_, clip, &renderQuad);
-}
-
-
 void Texture::free(void)
 {
-	SDL_DestroyTexture(texture_);
-	SDL_FreeFormat(&fmt_);
+	SDL_FreeSurface(surface_);
 }
 
-Uint32 Texture::getpixel(int x, int y)
+
+Uint32 Texture::getpixel32(int x, int y) const
 {
-	Uint8 *p = (Uint8 *)pixels_ + y * pitch_ + x * fmt_.BytesPerPixel;
+	Uint8 *p = (Uint8 *)surface_->pixels + y * surface_->pitch + x * surface_->format->BytesPerPixel; // * 4 <- Image already converted to bpp32 (Bpp4)
 
-	switch (fmt_.BytesPerPixel)
-	{
-	case 1:
-		return *p;
-		break;
-
-	case 2:
-		return *(Uint16 *)p;
-		break;
-
-	case 3:
-		if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-			return p[0] << 16 | p[1] << 8 | p[2];
-		else
-			return p[0] | p[1] << 8 | p[2] << 16;
-		break;
-
-	case 4:
-		return *(Uint32 *)p;
-		break;
-	
-	default:
-		return 0;
-	}
+	return *(Uint32 *)p;
 }
