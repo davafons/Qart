@@ -18,16 +18,25 @@ private:
 	SDL_Rect rect_; // Dimensions of the node
 
 	int level_; // Current level
-	float error_;
+	int error_;
 
+	Quadtree * parent_;
 	std::vector<std::unique_ptr<Quadtree> > nodes_;
 
 public:
-	Quadtree(Texture& texture, int level, const SDL_Rect& rect);
+	Quadtree(Quadtree * parent, Texture & texture, int level, const SDL_Rect& rect);
 	~Quadtree();
+
+	SDL_Color getAverageColor(void) const;
 
 	void split(void);
 
+	void calcError(void);
+
+	int getError(void) const;
+
 	void render(SDL_Renderer * renderer) const;
+
+	bool operator<(const Quadtree & quad) const;
 };
 

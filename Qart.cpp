@@ -3,7 +3,8 @@
 Qart::Qart(void) :
 	Engine(),
 	image_(Texture()),
-	qtree_(nullptr)
+	qtree_(nullptr),
+	squares_(0)
 {
 }
 
@@ -44,7 +45,8 @@ void Qart::input(void)
 			SDL_free(path);
 
 			delete qtree_;
-			qtree_ = new Quadtree(image_, 0, SDL_Rect{ 0, 0, SCREEN_WIDTH_, SCREEN_HEIGHT_ });
+			qtree_ = new Quadtree(nullptr, image_, 0, SDL_Rect{ 0, 0, SCREEN_WIDTH_, SCREEN_HEIGHT_ });
+			squares_ = 1;
 		}
 
 		if (e.type == SDL_KEYDOWN)
@@ -53,7 +55,10 @@ void Qart::input(void)
 				quit_ = true;
 
 			if (e.key.keysym.sym == SDLK_s)
-				qtree_->split();
+			{
+				if(qtree_ != nullptr)
+					qtree_->split();
+			}
 		}
 	}
 }
@@ -61,7 +66,8 @@ void Qart::input(void)
 
 void Qart::update(void)
 {
-
+	if(qtree_ != nullptr)
+		qtree_->split();
 }
 
 

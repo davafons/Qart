@@ -11,8 +11,8 @@ class Qart : public Engine
 private:
 	Texture image_;
 	Quadtree * qtree_;
-	
-	std::set<std::shared_ptr<Quadtree> > squares_;
+
+	int squares_;
 
 public:
 	Qart(void);
