@@ -2,8 +2,13 @@
 #include <memory>
 #include <sstream>
 
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#elif _WIN32
 #include <SDL.h>
 #include <SDL_image.h>
+#endif
 
 #include "Quadtree.h"
 
@@ -96,7 +101,7 @@ int main(int argc, char * argv[])
 				quit = true;
 		}
 
-		// Update 
+		// Update
 		if (!stop)
 		{
 			Quadtree * worst = qtree->findWorst();
@@ -118,7 +123,7 @@ int main(int argc, char * argv[])
 		}
 
 		SDL_RenderPresent(renderer); // There is no reason to clear the whole render in every frame, we just update with the new squares
-	}	
+	}
 
 
 	SDL_DestroyWindow(window);

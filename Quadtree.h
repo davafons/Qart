@@ -1,8 +1,14 @@
-#pragma once
+#ifndef QUADTREE_H_
+#define QUADTREE_H_
 
 #include <vector>
+#include <memory>
 
+#ifdef __linux__
+#include <SDL2/SDL.h>
+#elif _WIN32
 #include <SDL.h>
+#endif
 
 class Quadtree
 {
@@ -21,7 +27,7 @@ private:
 public:
 
 	Quadtree(std::unique_ptr<SDL_Surface> & image, int level, const SDL_Rect & rect);
-	
+
 	~Quadtree(void);
 
 	double getError(void) const;
@@ -43,3 +49,4 @@ private:
 	Uint32 getPixel32(int x, int y) const;
 };
 
+#endif /* QUADTREE_H_ */

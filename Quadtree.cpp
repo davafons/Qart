@@ -1,9 +1,6 @@
-#include <iostream>
-#include <memory>
 #include <cmath>
 
 #include "Quadtree.h"
-
 
 Quadtree::Quadtree(std::unique_ptr<SDL_Surface> & image, int level, const SDL_Rect & rect) :
 	image_(image),
@@ -62,7 +59,7 @@ Quadtree * Quadtree::findWorst(void)
 			if (temp_error > worst_error)
 			{
 				worst_error = temp_error;
-				worst = temp;		
+				worst = temp;
 			}
 		}
 	}
@@ -73,7 +70,7 @@ Quadtree * Quadtree::findWorst(void)
 void Quadtree::render(SDL_Renderer * renderer, bool outline) const
 {
 	SDL_SetRenderDrawColor(renderer, av_color_.r, av_color_.g, av_color_.b, av_color_.a);
-	SDL_RenderFillRect(renderer, &rect_); 
+	SDL_RenderFillRect(renderer, &rect_);
 
 	if (outline) // Renders black borders if true
 	{
@@ -88,7 +85,7 @@ void Quadtree::calculateColorAndError(void)
 	int totalR = 0, totalG = 0, totalB = 0;
 
 	SDL_LockSurface(image_.get()); // Lock surface for pixel manipulation
-	
+
 	// Calculate average color
 	for (int y = rect_.y; y < rect_.y + rect_.h; ++y)
 	{
