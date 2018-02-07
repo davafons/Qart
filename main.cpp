@@ -128,6 +128,7 @@ int main(int argc, char * argv[])
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	SDL_FreeSurface(image.get());
 
 	IMG_Quit();
 	SDL_Quit();
@@ -164,7 +165,7 @@ std::unique_ptr<SDL_Surface> loadSurface(const char * path, const int width, con
 		SDL_FreeSurface(loaded_surface);
 		SDL_FreeSurface(surf_32bpp);
 
-		return std::make_unique<SDL_Surface>(*scaled_surface);
+		return std::unique_ptr<SDL_Surface>(scaled_surface);
 	}
 	catch (const char * msg)
 	{

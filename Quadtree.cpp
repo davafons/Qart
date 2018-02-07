@@ -14,7 +14,7 @@ Quadtree::Quadtree(std::unique_ptr<SDL_Surface> & image, int level, const SDL_Re
 }
 
 
-Quadtree::~Quadtree() { }
+Quadtree::~Quadtree() {}
 
 
 double Quadtree::getError(void) const { return error_; }
