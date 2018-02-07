@@ -8,7 +8,7 @@ This program is a visualization of an "image compression" algorithm based on the
 
 Precompiled versions for Windows and Linux
 * [Qart 1.0.0 Linux](https://github.com/Dibad/Qart/releases/download/v1.0.0/Qart-1.0.0-linux.tar.gz)
-* [Qart 1.0.0 Windows](https://github.com/Dibad/Qart/releases/download/v1.0.0/Qart-1.0.0-windows.zip)
+* [Qart 1.0.0 Windows](https://github.com/Dibad/Qart/releases/download/v1.0.0/Qart-1.0.0-win32.zip)
 
 ## Build
 
