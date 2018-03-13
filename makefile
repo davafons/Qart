@@ -1,22 +1,36 @@
 CC = g++
 
-TARGET = qart
+TARGET = Qart
 
-FLAGS = -Wall -std=c++14
+_dummy := $(shell mkdir obj bin)
+
+SRCS := $(wildcard src/*.cpp)
+OBJS := $(addprefix obj/, $(notdir $(SRCS:.cpp=.o)))
+
+INCLUDE_PATHS = -I$(CURDIR)\include\SDL2
+LIBRARY_PATHS = -L$(CURDIR)\lib
 
 LINKER_FLAGS = -lSDL2 -lSDL2_image
 
-_dummy := $(shell mkdir -p obj)
+COMPILER_FLAGS = -Wall -std=c++14
 
+ifeq ($(OS), Windows_NT)
+$(TARGET): $(OBJS)
+	$(CC) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $^ -o bin\$@ -lmingw32 -lSDL2main $(LINKER_FLAGS)
 
-SRCS := $(wildcard src/*.cpp)
-OBJS := $(addprefix obj/,$(notdir $(SRCS:.cpp=.o)))
+obj/%.o: src/%.cpp
+	$(CC) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) -c $< -o $@
 
-$(TARGET) : $(OBJS)
-	$(CC) $^ -o $@ $(LINKER_FLAGS)
-	
-obj/%.o : src/%.cpp
-	$(CC) $(FLAGS) -c $< -o $@
-	
 clean:
-	rm $(OBJS) $(TARGET)
+	del /s /q *.o $(TARGET).exe
+
+else
+$(TARGET) : $(OBJS)
+	$(CC) $^ -o bin/$@ $(LINKER_FLAGS)
+
+obj/%.o: src/%.cpp
+	$(CC) $(COMPILER_FLAGS) -c $< -o $@
+
+clean:
+	rm -rf $(OBJS) bin/$(TARGET)
+endif
