@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "Quadtree.h"
+#include "../Quadtree.h"
 
 Quadtree::Quadtree(std::unique_ptr<SDL_Surface> & image, int level, const SDL_Rect & rect) :
 	image_(image),

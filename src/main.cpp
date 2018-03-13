@@ -10,7 +10,7 @@
 #include <SDL_image.h>
 #endif
 
-#include "Quadtree.h"
+#include "../Quadtree.h"
 
 std::unique_ptr<SDL_Surface> loadSurface(const char * path, const int width, const int height);
 
@@ -97,7 +97,7 @@ int main(int argc, char * argv[])
 				SDL_free(path);
 			}
 
-			else if (e.type == SDL_QUIT || e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE)
+			else if (e.type == SDL_QUIT || (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE))
 				quit = true;
 		}
 
