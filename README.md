@@ -2,9 +2,17 @@
 
 Quadtree generated images.
 
-This program is a visualization of an "image compression" algorithm based on the use of Quadtrees. The image is split in four sub-squares. Then each square is assigned an averaged color based on the colors from the parent square, and calculates its error (difference between the averaged color and the real ones, divided by the width of the square). Every frame, the square with the highest error is split into its four sub-squares, refining the image. This process is repeated N times until all the squares have an error of 0.
+This program is a visualization of an "image compression" algorithm based on the use of Quadtrees. 
 
-## Release versions
+This algorithm divides the image into __squares (Or rectangles)__. Starting with a square of the same size of the image, it calculates:
+* The __average color__: Adding up each R, G, B and A component separately for each pixel, and dividing by the total amount of pixels in the square.
+* The __error__: Difference between the averaged color and the R, G, B, A component for each pixel.
+
+Then, the algorithm will find the square with the __highest error__ (The least refined). Such square will be divided into __four sub-square__, halving its size, and again, calculating the average color and error of each sub-square.
+
+The algorithm will be __repeated N times__ until all the squares have an error of __0__.
+
+## Release
 
 Precompiled versions for Windows and Linux
 * [Qart 1.0.0 Linux](https://github.com/Dibad/Qart/releases/download/v1.0.0/Qart-1.0.0-linux.tar.gz)
