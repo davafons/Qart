@@ -4,7 +4,7 @@ _"Quadtree generated images"_
 
 This program is a visualization of an __"image compression"__ algorithm based on the use of __Quadtrees__. 
 
-This algorithm divides the image into __squares (Or rectangles)__. Starting with a square of the same size of the image, it calculates:
+This algorithm divides the image into __squares (or rectangles)__. Starting with a square of the same size of the image, it calculates:
 * The __average color__: Adding up each R, G, B and A component separately for each pixel, and dividing by the total amount of pixels in the square.
 * The __error__: Difference between the averaged color and the R, G, B, A component for each pixel.
 
