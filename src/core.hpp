@@ -1,9 +1,12 @@
+#pragma once
+
 #include <iostream>
 #include <set>
 
 #include "screen.hpp"
 #include "surface.hpp"
 #include "rect.hpp"
+#include "quadtree.hpp"
 
 
 class Core
@@ -23,9 +26,13 @@ class Core
 
         int iterations_;
 
-        std::set<Rect> rectangles_;
+        //using Data_Type = std::set<Rect>;
+        using Data_Type = Quadtree<Rect>;
+        Data_Type rectangles_;
 
-        void splitAndRenderChilds();
+
+        void splitAndRenderChilds(Quadtree<Rect> & quadtree);
+        void splitAndRenderChilds(std::set<Rect> & rectangles);
 
         void handleInput();
         

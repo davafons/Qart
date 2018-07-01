@@ -2,18 +2,32 @@
 
 bool Rect::borderlines_enabled_ = false;
 
-Rect::Rect(Surface & parent_surface, SDL_Rect rect) :
+Rect::Rect(Surface * parent_surface, SDL_Rect rect) :
     parent_surface_(parent_surface),
     rect_(rect)
 {
-    calculateAverageColor();
-    calculateError();
+    if(parent_surface_)
+    {
+        calculateAverageColor();
+        calculateError();
+    }
 }
 
 
-Rect::Rect(Surface & parent_surface, int x, int y, int w, int h) :
+Rect::Rect(Surface * parent_surface, int x, int y, int w, int h) :
     Rect(parent_surface, SDL_Rect{x, y, w, h})
 {
+}
+
+
+Rect & Rect::operator=(const Rect & rhs)
+{
+    parent_surface_ = rhs.parent_surface_;
+    rect_ = rhs.rect_;
+    average_color_ = rhs.average_color_;
+    error_ = rhs.error_;
+
+    return * this;
 }
 
 
@@ -22,14 +36,14 @@ void Rect::calculateAverageColor()
     int totalR, totalG, totalB, totalA;
     totalR = totalG = totalB = totalA = 0;
 
-    parent_surface_.lock();
+    parent_surface_->lock();
 
     for(int j = y(); j < h() + y(); ++j)
     {
         for(int i = x(); i < w() + x(); ++i)
         {
             Uint8 r, g, b, a;
-            parent_surface_.getPixelColor(i, j, r, g, b, a);
+            parent_surface_->getPixelColor(i, j, r, g, b, a);
 
             totalR += r;
             totalG += g;
@@ -38,7 +52,7 @@ void Rect::calculateAverageColor()
         }
     }
 
-    parent_surface_.unlock();
+    parent_surface_->unlock();
 
     int area = w() * h();
 
@@ -67,14 +81,14 @@ void Rect::calculateError()
 {
     double error = 0.0f;
 
-    parent_surface_.lock();
+    parent_surface_->lock();
 
     for(int j = y(); j < h() + y(); ++j)
     {
         for(int i = x(); i < w() + x(); ++i)
         {
             Uint8 r, g, b, a;
-            parent_surface_.getPixelColor(i, j, r, g, b, a);
+            parent_surface_->getPixelColor(i, j, r, g, b, a);
 
             error += std::pow((int)r - (int)average_color_.r, 2);        
             error += std::pow((int)g - (int)average_color_.g, 2);        
@@ -83,7 +97,7 @@ void Rect::calculateError()
         }
     }
 
-    parent_surface_.unlock();
+    parent_surface_->unlock();
 
     error /= w();
 

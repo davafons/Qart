@@ -23,10 +23,10 @@ void Core::execute()
     {
         handleInput();
 
-        if(currentState_ == State::RUNNING && !rectangles_.empty())
+        if(currentState_ == State::RUNNING)
         {
             ++iterations_;
-            splitAndRenderChilds();
+            splitAndRenderChilds(rectangles_);
             mainScreen_.setWindowTitle("Qart - Iterations: " + std::to_string(iterations_) + 
                                         ". Rects: " + std::to_string(iterations_ * 4));
         }
@@ -36,9 +36,15 @@ void Core::execute()
 }
 
 
-void Core::splitAndRenderChilds()
+void Core::splitAndRenderChilds(Quadtree<Rect> & quadtree)
 {
-    std::set<Rect>::const_iterator highestErrorRect = std::prev(rectangles_.end());
+    quadtree.findHighest()->splitAndRenderChilds(mainScreen_);
+}
+
+
+void Core::splitAndRenderChilds(std::set<Rect> & rectangles)
+{
+    std::set<Rect>::const_iterator highestErrorRect = std::prev(rectangles.end());
     
     float sub_width = (float)highestErrorRect->w() / 2 + 0.5f;
     float sub_height = (float)highestErrorRect->h() / 2 + 0.5f;
@@ -49,18 +55,18 @@ void Core::splitAndRenderChilds()
         {
             if(sub_width > 1 && sub_height > 1)
             {
-                Rect child_rect(image_, highestErrorRect->x() + ((sub_width - 0.5f) * x),
+                Rect child_rect(&image_, highestErrorRect->x() + ((sub_width - 0.5f) * x),
                                         highestErrorRect->y() + ((sub_height - 0.5f) * y),
                                         sub_width,
                                         sub_height);
 
                 child_rect.render(mainScreen_.renderer());
-                rectangles_.insert(child_rect);
+                rectangles.insert(child_rect);
             }
         }
     }
 
-    rectangles_.erase(highestErrorRect);
+    rectangles.erase(highestErrorRect);
 }
 
 
@@ -102,7 +108,8 @@ void Core::handleInput()
                     if(currentState_ == State::RUNNING)
                         currentState_ = State::PAUSED;
                     else
-                        currentState_ = State::RUNNING;
+                        if(image_.isLoaded())
+                            currentState_ = State::RUNNING;
                     break;
             }
         }
@@ -112,7 +119,7 @@ void Core::handleInput()
 
 void Core::start()
 {
-    rectangles_.insert(Rect(image_, 0, 0, image_.width(), image_.height()));
+    rectangles_.insert(Rect(&image_, 0, 0, image_.width(), image_.height()));
     currentState_ = State::RUNNING;
 }
 
