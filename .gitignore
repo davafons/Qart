@@ -33,3 +33,4 @@ packages/
 
 lib/
 include/
+.vscode/
