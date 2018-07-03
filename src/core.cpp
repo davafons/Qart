@@ -26,7 +26,7 @@ void Core::execute()
         if(currentState_ == State::RUNNING)
         {
             ++iterations_;
-            splitAndRenderChilds(rectangles_);
+            splitAndRenderChilds();
             mainScreen_.setWindowTitle("Qart - Iterations: " + std::to_string(iterations_) + 
                                         ". Rects: " + std::to_string(iterations_ * 4));
         }
@@ -36,15 +36,10 @@ void Core::execute()
 }
 
 
-void Core::splitAndRenderChilds(Quadtree<Rect> & quadtree)
-{
-    quadtree.findHighest()->splitAndRenderChilds(mainScreen_);
-}
 
-
-void Core::splitAndRenderChilds(std::set<Rect> & rectangles)
+void Core::splitAndRenderChilds()
 {
-    std::set<Rect>::const_iterator highestErrorRect = std::prev(rectangles.end());
+    std::set<Rect>::const_iterator highestErrorRect = std::prev(rectangles_.end());
     
     float sub_width = (float)highestErrorRect->w() / 2 + 0.5f;
     float sub_height = (float)highestErrorRect->h() / 2 + 0.5f;
@@ -61,12 +56,12 @@ void Core::splitAndRenderChilds(std::set<Rect> & rectangles)
                                         sub_height);
 
                 child_rect.render(mainScreen_.renderer());
-                rectangles.insert(child_rect);
+                rectangles_.insert(child_rect);
             }
         }
     }
 
-    rectangles.erase(highestErrorRect);
+    rectangles_.erase(highestErrorRect);
 }
 
 

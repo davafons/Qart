@@ -26,13 +26,9 @@ class Core
 
         int iterations_;
 
-        //using Data_Type = std::set<Rect>;
-        using Data_Type = Quadtree<Rect>;
-        Data_Type rectangles_;
+        std::set<Rect> rectangles_;
 
-
-        void splitAndRenderChilds(Quadtree<Rect> & quadtree);
-        void splitAndRenderChilds(std::set<Rect> & rectangles);
+        void splitAndRenderChilds();
 
         void handleInput();
         
