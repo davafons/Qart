@@ -2,7 +2,7 @@
 
 _"Quad-generated images"_
 
-This program shows a visualization of an __"image compression"__ algorithm.
+This program shows the visualization of an __"image compression"__ algorithm.
 
 This algorithm divides the image into __squares (or rectangles)__. Starting with a square of the same size of the image, it calculates:
 * The __average color__: Adding up each R, G, B and A component separately for each pixel, and dividing by the total amount of pixels in the square.
