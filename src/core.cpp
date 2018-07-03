@@ -7,6 +7,13 @@ Core::Core(const char * title, int width, int height) :
     iterations_(0),
     rectangles_()
 {
+    std::cout << "Qart - 1.1.0" << std::endl << std::endl;
+    std::cout << "Drag and drop an image to start" << std::endl;
+    std::cout << "Keys:" << std::endl;
+    std::cout << "S: Resume-Pause" << std::endl;
+    std::cout << "R: Restart" << std::endl;
+    std::cout << "D: Show borders (And reset image)" << std::endl;
+
 }
 
 
@@ -34,7 +41,6 @@ void Core::execute()
             currentState_ = State::PAUSED;
     }
 }
-
 
 
 void Core::splitAndRenderChilds()

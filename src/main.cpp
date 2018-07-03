@@ -7,7 +7,7 @@ int main(int argc, char * argv[])
 {
     try
     {
-        Core program("QArt - Drag an image to start.", 700, 700);
+        Core program("QArt - Drop an image to start.", 700, 700);
         program.execute();
     }
     catch(const char * msg)
