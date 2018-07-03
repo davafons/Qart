@@ -6,7 +6,6 @@
 #include "screen.hpp"
 #include "surface.hpp"
 #include "rect.hpp"
-#include "quadtree.hpp"
 
 
 class Core

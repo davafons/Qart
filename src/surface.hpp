@@ -23,9 +23,9 @@ class Surface
     private:
         SDL_Surface * surface_;
 
-        static bool IMG_Initialized;
-        static int MAX_WIDTH;
-        static int MAX_HEIGHT;
+        static bool IMG_Initialized_;
+        static const int MAX_WIDTH_;
+        static const int MAX_HEIGHT_;
 
         void adaptToMaxSize(int & width, int & height) const;
 

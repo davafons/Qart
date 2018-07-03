@@ -2,20 +2,20 @@
 
 #include "surface.hpp"
 
-bool Surface::IMG_Initialized = false;
-int Surface::MAX_WIDTH = 1280;
-int Surface::MAX_HEIGHT = 720;
+bool Surface::IMG_Initialized_ = false;
+const int Surface::MAX_WIDTH_ = 1280;
+const int Surface::MAX_HEIGHT_ = 720;
 
 
 Surface::Surface(const char * path, int width, int height)
 {
-    if(!IMG_Initialized)
+    if(!IMG_Initialized_)
     {
         int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
         if(!(IMG_Init(imgFlags) & imgFlags))
             throw IMG_GetError();
         
-        IMG_Initialized = true;
+        IMG_Initialized_ = true;
     }
 
     if(path)
@@ -44,6 +44,7 @@ void Surface::load(const char * path, int width, int height)
         if(height == 0) height = loaded_surface->h;
         adaptToMaxSize(width, height);
 
+        // The process of scaling a surface requires to create a new one with the desired properties
         SDL_Surface * scaled_surface = SDL_CreateRGBSurface(loaded_surface->flags, width, height, 32, loaded_surface->format->Rmask, loaded_surface->format->Gmask, loaded_surface->format->Bmask, loaded_surface->format->Amask);
         if(scaled_surface == nullptr)
             throw SDL_GetError();
@@ -92,15 +93,15 @@ void Surface::adaptToMaxSize(int & width, int & height) const
 {
     float aspect_ratio = (float)width / height;
 
-    if(width > MAX_WIDTH)
+    if(width > MAX_WIDTH_)
     {
-        width = MAX_WIDTH;
-        height = MAX_WIDTH / aspect_ratio + 0.5f;
+        width = MAX_WIDTH_;
+        height = MAX_WIDTH_ / aspect_ratio + 0.5f;
     }
-    else if(height > MAX_HEIGHT)
+    else if(height > MAX_HEIGHT_)
     {
-        width = MAX_HEIGHT * aspect_ratio + 0.5f;
-        height = MAX_HEIGHT;
+        width = MAX_HEIGHT_ * aspect_ratio + 0.5f;
+        height = MAX_HEIGHT_;
     }
 }
 
